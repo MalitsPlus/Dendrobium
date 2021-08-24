@@ -1,0 +1,43 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: checkin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 19 * * *'
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    env:
+      RUN_CACHE: ${{ !!secrets.WB_CONFIG }}
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Cache
+      if: env.RUN_CACHE == 'true'
+      uses: actions/cache@v2
+      with:
+        path: cache
+        key: gc-cache-v3-${{ github.run_id }}
+        restore-keys: |
+          gc-cache-v3-
+            
+    - name: Install dependencies
+      run: yarn
+
+    - name: Checkin
+      env:
+        CONFIG_URL: ${{ secrets.CONFIG_URL }}
+        COOKIE: ${{ secrets.COOKIE }}
+        WB_CONFIG: ${{ secrets.WB_CONFIG }}
+      run: yarn start
