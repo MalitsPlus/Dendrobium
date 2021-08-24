@@ -6,7 +6,7 @@ name: checkin
 on:
   workflow_dispatch:
   schedule:
-    - cron: '12 19 * * *'
+    - cron: '12 22 * * *'
 
 jobs:
   checkin:
