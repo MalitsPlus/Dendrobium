@@ -60,7 +60,7 @@ const getConfig = async () => {
       const roles = await mysClient.getRoles();
       for (const role of roles) {
         await mysClient.checkin(role);
-        await sleep(3000);
+        await sleep(2837);
       }
     }
   }
